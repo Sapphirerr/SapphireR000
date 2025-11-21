@@ -115,19 +115,27 @@
     <!-- Snowflakes for About Modal -->
     <div id="snowflakes-container" style="display: none;"></div>
 
-<!-- ==================== CART MODAL ==================== -->
-    <div id="cart-modal" class="modal snow-modal">
-        <div class="modal-content snow-modal-content">
-            <span class="close">×</span>
-            <h2 class="modal-title">ตะกร้าสินค้า</h2>
-            <div id="cart-items" class="snow-cart-items"></div>
-            <div class="cart-total">
-                รวมทั้งสิ้น: <span id="total-price">0</span> บาท
-            </div>
-            <button class="checkout-btn-official">ชำระเงิน</button>
-        </div>
-    </div>
+<!-- ==================== CART MODAL  ==================== -->
+<div id="cart-modal" class="modal snow-modal">
+    <div class="modal-content snow-modal-content">
+        <button class="close">×</button>
+        <h2 class="modal-title">
+            <i class="fas fa-shopping-bag"></i> ตะกร้าสินค้าของคุณ
+        </h2>
 
+        <div id="cart-items" class="snow-cart-items">
+            <!-- สินค้าจะมาโผล่ตรงนี้แบบ Card สวย ๆ -->
+        </div>
+
+        <div class="cart-total">
+            รวมทั้งสิ้น: <strong><span id="total-price">0</span> บาท</strong>
+        </div>
+
+        <button class="checkout-btn-official">
+            ชำระเงินทันที
+        </button>
+    </div>
+</div>
 <!-- ==================== FOOTER ==================== -->
     <footer class="footer-with-bg">
         <div class="footer-bg-overlay">
@@ -182,3 +190,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
