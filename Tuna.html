@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head> 
+    <title>TunaRoji_ICT308</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TunaRoji - ร้านของฝากในฮอกไกโด</title>
+    <link rel="stylesheet" href="style2.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+<!-- ==================== HEADER  ==================== -->
+    <header class="official-header">
+        <div class="container full-edge">
+            <div class="logo-section">
+                <img src="Img/Logo.png" alt="TunaRoji" class="logo-img">
+                <h1 class="brand-name">TunaRoji</h1>
+            </div>
+
+            <div class="header-right">
+                <nav class="nav-menu">
+                    <a href="#home" class="nav-link">หน้าหลัก</a>
+                    <a href="#products" class="nav-link">สินค้า</a>
+                    <a href="#" class="nav-link" id="about-trigger">เกี่ยวกับเรา</a>
+                </nav>
+                <div class="header-actions">
+                    <input type="text" id="search-input" placeholder="ค้นหาสินค้า..." class="search-bar">
+                    <button id="dark-mode-btn" class="mode-button" title="เปลี่ยนธีม">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <button id="lang-btn" class="lang-button" title="เปลี่ยนภาษา">
+                        <span class="lang-text">JP</span>
+                    </button>
+                    <button id="cart-btn" class="cart-button">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span id="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+<!-- ==================== BANNER SLIDER ==================== -->
+    <section id="home" class="banner">
+        <div class="slider">
+            <img src="Img/Banner/Tuna.jpg" alt="สินค้าแนะนำ 1" class="slide active">
+            <img src="Img/Banner/miku.jpg" alt="สินค้าแนะนำ 2" class="slide">
+            <img src="Img/Banner/Google.jpg" alt="สินค้าแนะนำ 3" class="slide">
+        </div>
+    </section>
+
+<!-- ==================== CATEGORIES ==================== -->
+    <section id="categories">
+        <button class="cat-btn" data-cat="all">ทั้งหมด</button>
+        <button class="cat-btn" data-cat="อาหาร">อาหาร</button>
+        <button class="cat-btn" data-cat="ขนม" >ขนม</button>
+        <button class="cat-btn" data-cat="ของใช้เครื่องครัว">ของใช้เครื่องครัว</button>
+        <button class="cat-btn" data-cat="Skincare" >Skincare</button>
+        <button class="cat-btn" data-cat="ของใช้ทั่วไป" >ของใช้ทั่วไป</button>
+        <button class="cat-btn" data-cat="เสื้อผ้า">เสื้อผ้า</button>
+        <button class="cat-btn" data-cat="เครื่องปรุง" >เครื่องปรุง</button>
+        <button class="cat-btn" data-cat="งานฝีมือ">งานฝีมือ</button>
+        <button class="cat-btn" data-cat="ของจิปาถะ">ของจิปาถะ</button>
+        <button class="cat-btn" data-cat="เครื่องดื่ม">เครื่องดื่ม</button>
+    </section>
+
+<!-- ==================== PRODUCTS ==================== -->
+    <section id="products">
+        <div class="product-grid"></div>
+        <div class="pagination"></div>
+    </section>
+
+<!-- ==================== ABOUT MODAL ==================== -->
+    <div id="about-modal" class="modal">
+        <div class="modal-content about-modal">
+            <span class="close">×</span>
+            <div class="about-header">
+                <img src="Img/Logo.png" alt="TunaRoji" class="about-logo">
+                <h2>เกี่ยวกับ TunaRoji</h2>
+            </div>
+            <div class="about-body">
+                <p><strong>TunaRoji</strong> ก่อตั้งขึ้นในปี 2025 เป็นร้านของฝากประจำ <strong>ฮอกไกโด ญี่ปุ่น</strong></p>
+                <p>ร้านจะตั้งอยู่ที่ฮอกไกโด ใครจะไป ไปไม่ได้ เพราะมันเป็นงานส่งอาจารย์ เจ้าของเว็บมันมั่วขึ้นมา</p>
+                <div class="highlight-box">
+                    <h1>SapphireR CH.</h1>
+                </div>
+                <p class="mission">"ส่งต่อความหวานและความสุขจากฮอกไกโดดินแดนเมืองหิมะ"</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PRODUCT DETAIL MODAL ==================== -->
+    <div id="product-modal" class="modal">
+        <div class="modal-content product-modal">
+            <button class="close">×</button>
+            <div class="product-modal-body">
+                <div class="product-modal-image">
+                    <img id="pm-image" src="" alt=""> 
+                </div>
+                <div class="product-modal-info">
+                    <h2 id="pm-name">Product Name</h2>
+                    <div class="pm-meta">
+                        <span id="pm-cat" class="pm-cat">หมวด: -</span>
+                        <span id="pm-price" class="pm-price">0 บาท</span>
+                    </div>
+                    <p id="pm-desc" class="pm-desc">คำอธิบายสินค้า...</p>
+                    <div class="pm-actions">
+                        <button id="pm-add-btn" class="checkout-btn-official">ใส่ตะกร้า</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Snowflakes for About Modal -->
+    <div id="snowflakes-container" style="display: none;"></div>
+
+<!-- ==================== CART MODAL ==================== -->
+    <div id="cart-modal" class="modal snow-modal">
+        <div class="modal-content snow-modal-content">
+            <span class="close">×</span>
+            <h2 class="modal-title">ตะกร้าสินค้า</h2>
+            <div id="cart-items" class="snow-cart-items"></div>
+            <div class="cart-total">
+                รวมทั้งสิ้น: <span id="total-price">0</span> บาท
+            </div>
+            <button class="checkout-btn-official">ชำระเงิน</button>
+        </div>
+    </div>
+
+<!-- ==================== FOOTER ==================== -->
+    <footer class="footer-with-bg">
+        <div class="footer-bg-overlay">
+            <div class="footer-logo-center">
+                <img src="Img/Logo.png" alt="TunaRoji Logo" class="footer-main-logo">
+            </div>
+        </div>
+
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>TunaRoji</h3>
+                <p>ร้านขายของฝากที่ดีที่สุดประจำ ฮอกไกโด ญี่ปุ่น</p>
+            </div>
+            <div class="footer-column">
+                <h3>ลิงก์ด่วน</h3>
+                <ul>
+                    <li><a href="#home">หน้าหลัก</a></li>
+                    <li><a href="#products">สินค้า</a></li>
+                    <li><a href="#" id="about-trigger-footer">เกี่ยวกับเรา</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>ติดต่อเรา</h3>
+                <p>ที่อยู่: 123 จังหวัดฮอกไกโด ญี่ปุ่น 10100</p>
+                <p>โทร: 02-123-4567</p>
+                <p>อีเมล: info@tunaroji.com</p>
+            </div>
+            <div class="footer-column">
+                <h3>ติดตามเรา</h3>
+                <div class="social-icons">
+                    <a href="https://www.facebook.com/ren.kiattisak" target="_blank">
+                        <img src="icon/Facebook_Logo.png" alt="Facebook" class="social-logo">
+                    </a>
+                    <a href="https://x.com/cfm_snowmiku" target="_blank">
+                        <img src="icon/X.png" alt="Twitter" class="social-logo">
+                    </a>
+                    <a href="https://line.me/ti/p/Ct_s8AkG1t" target="_blank">
+                        <img src="icon/LINE.png" alt="LINE" class="social-logo">
+                    </a>
+                    <a href="https://www.instagram.com/rx_ktts/" target="_blank">
+                        <img src="icon/IG.webp" alt="Instagram" class="social-logo">
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>© 2025 บริษัท TunaRoji จำกัด.</p>
+        </div>
+    </footer>
+    
+    <script src="script.js"></script>
+</body>
+</html>
