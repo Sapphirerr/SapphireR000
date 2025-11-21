@@ -186,10 +186,9 @@ document.addEventListener('DOMContentLoaded', () => {
         displayPagination();
     }
 
+    // ==================== Modal รายละเอียดสินค้า ====================
     function showProductModal(product) {
         const modal = document.getElementById('product-modal');
-        if (!modal) return;
-
         const pmImage = modal.querySelector('#pm-image');
         const pmName = modal.querySelector('#pm-name');
         const pmCat = modal.querySelector('#pm-cat');
@@ -198,10 +197,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const pmAddBtn = modal.querySelector('#pm-add-btn');
 
         pmName.textContent = product.name;
-        pmName.title = product.name; 
         pmCat.textContent = `หมวด: ${product.cat}`;
         pmPrice.textContent = `${product.price.toLocaleString()} บาท`;
-        pmDesc.textContent = product.description || 'ไม่มีคำอธิบายสำหรับสินค้าชิ้นนี้.';
+        pmDesc.textContent = product.description || 'ไม่มีคำอธิบาย';
 
         const candidates = product.imageCandidates || [];
         pmImage.dataset.imgIndex = '0';
@@ -218,116 +216,82 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         pmAddBtn.onclick = () => {
-            // Add visual feedback - button animation
             pmAddBtn.style.transform = 'scale(0.95)';
-            pmAddBtn.textContent = '✓ เพิ่มแล้ว';
+            pmAddBtn.textContent = 'เพิ่มแล้ว';
             pmAddBtn.style.background = 'linear-gradient(135deg, #27ae60, #2ecc71)';
-            
-            // Call add to cart
             addToCart(product.id);
-            
-            // Reset button after a delay
             setTimeout(() => {
                 pmAddBtn.textContent = 'ใส่ตะกร้า';
                 pmAddBtn.style.background = '';
                 pmAddBtn.style.transform = '';
-                
-                // Close modal
                 modal.style.display = 'none';
                 document.body.style.overflow = '';
-            }, 600);
+            }, 700);
         };
 
         document.body.style.overflow = 'hidden';
         modal.style.display = 'block';
     }
 
+    // ==================== Pagination ====================
     function displayPagination() {
         const pagination = document.querySelector('.pagination');
         pagination.innerHTML = '';
         const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
-        
-        const pagesPerWindow = 5;
-        let startPage = Math.max(1, currentPage - Math.floor(pagesPerWindow / 2));
-        let endPage = Math.min(totalPages, startPage + pagesPerWindow - 1);
-        
-        if (endPage - startPage + 1 < pagesPerWindow) {
-            startPage = Math.max(1, endPage - pagesPerWindow + 1);
-        }
-        
+
         const prevBtn = document.createElement('button');
         prevBtn.textContent = 'Previous';
-        prevBtn.className = currentPage === 1 ? 'disabled' : '';
         prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => {
-            if (currentPage > 1) {
-                currentPage--;
-                displayProducts(currentPage);
-            }
-        };
+        prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; displayProducts(currentPage); } };
         pagination.appendChild(prevBtn);
-        
-        for (let i = startPage; i <= endPage; i++) {
+
+        for (let i = 1; i <= totalPages; i++) {
             const btn = document.createElement('button');
             btn.textContent = i;
             if (i === currentPage) btn.classList.add('active');
             btn.onclick = () => { currentPage = i; displayProducts(i); };
             pagination.appendChild(btn);
         }
-        
+
         const nextBtn = document.createElement('button');
         nextBtn.textContent = 'Next';
-        nextBtn.className = currentPage === totalPages ? 'disabled' : '';
         nextBtn.disabled = currentPage === totalPages;
-        nextBtn.onclick = () => {
-            if (currentPage < totalPages) {
-                currentPage++;
-                displayProducts(currentPage);
-            }
-        };
+        nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; displayProducts(currentPage); } };
         pagination.appendChild(nextBtn);
     }
 
-    // ==================== หมวดหมู่ ====================
-    const catButtons = document.querySelectorAll('.cat-btn');
-
-    catButtons.forEach(btn => {
+    // ==================== หมวดหมู่ + ค้นหา ====================
+    document.querySelectorAll('.cat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
-            catButtons.forEach(b => b.classList.remove('active-cat'));
-            
+            document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active-cat'));
             btn.classList.add('active-cat');
-
             currentCat = btn.dataset.cat;
             filteredProducts = currentCat === 'all' ? products : products.filter(p => p.cat === currentCat);
             currentPage = 1;
             displayProducts();
         });
     });
+    document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
 
-document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
-
-    // ==================== ค้นหา ====================
-    function searchProducts() {
+    document.getElementById('search-input').addEventListener('input', () => {
         const query = document.getElementById('search-input').value.toLowerCase();
-        filteredProducts = products.filter(p => 
-            (currentCat === 'all' || p.cat === currentCat) && 
+        filteredProducts = products.filter(p =>
+            (currentCat === 'all' || p.cat === currentCat) &&
             p.name.toLowerCase().includes(query)
         );
         currentPage = 1;
         displayProducts();
-    }
-    document.getElementById('search-input').addEventListener('input', searchProducts);
-
-    // ==================== สไลด์แบนเนอร์ ====================
-    let slideIndex = 0;
-    const slides = document.querySelectorAll('.slide');
-    function showSlide() {
-        slides.forEach(s => s.classList.remove('active'));
-        slides[slideIndex].classList.add('active');
-        slideIndex = (slideIndex + 1) % slides.length;
-    }
-    setInterval(showSlide, 3000);
-
+    });
+    // ========= เปิด "เกี่ยวกับเรา" ทั้งจากเมนูและ footer =========
+    document.querySelectorAll('#about-trigger, #about-trigger-footer').forEach(trigger => {
+        trigger.addEventListener('click', (e) => {
+            e.preventDefault(); // ป้องกันการกระโดดหน้า
+            const aboutModal = document.getElementById('about-modal');
+            aboutModal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        });
+    });
+    
     // ==================== ตะกร้า ====================
     window.addToCart = function(id) {
         const product = products.find(p => p.id === id);
@@ -343,23 +307,15 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
     };
 
     window.increaseQuantity = function(id) {
-        const item = cart.find(i => i.id === id);
-        if (item) {
-            item.quantity++;
-            updateCart();
-        }
+        cart.find(i => i.id === id).quantity++;
+        updateCart();
     };
 
     window.decreaseQuantity = function(id) {
         const item = cart.find(i => i.id === id);
-        if (item) {
-            item.quantity--;
-            if (item.quantity <= 0) {
-                removeFromCart(id);
-            } else {
-                updateCart();
-            }
-        }
+        item.quantity--;
+        if (item.quantity <= 0) removeFromCart(id);
+        else updateCart();
     };
 
     function updateCart() {
@@ -369,38 +325,26 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
         let total = 0;
 
         if (cart.length === 0) {
-            itemsDiv.innerHTML = '<p style="text-align:center; color:#95a5a6; padding:20px;">ตะกร้าว่างเปล่า</p>';
+            itemsDiv.innerHTML = '<p style="text-align:center;padding:30px;color:#999">ตะกร้าว่างเปล่า</p>';
             document.getElementById('total-price').textContent = '0';
             return;
         }
 
         const table = document.createElement('table');
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>สินค้า</th>
-                    <th>จำนวน</th>
-                    <th>ราคา</th>
-                    <th>ลบ</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        `;
+        table.innerHTML = `<thead><tr><th>สินค้า</th><th>จำนวน</th><th>ราคา</th><th>ลบ</th></tr></thead><tbody></tbody>`;
         const tbody = table.querySelector('tbody');
 
         cart.forEach(item => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
                 <td>${item.name}</td>
-                <td style="text-align: center;">
+                <td style="text-align:center;">
                     <button class="qty-btn qty-minus" onclick="decreaseQuantity(${item.id})">-</button>
                     <span class="qty-display">${item.quantity}</span>
                     <button class="qty-btn qty-plus" onclick="increaseQuantity(${item.id})">+</button>
                 </td>
                 <td><strong>${(item.price * item.quantity).toLocaleString()} บาท</strong></td>
-                <td>
-                    <button class="remove-btn" onclick="removeFromCart(${item.id})">ลบ</button>
-                </td>
+                <td><button class="remove-btn" onclick="removeFromCart(${item.id})">ลบ</button></td>
             `;
             tbody.appendChild(tr);
             total += item.price * item.quantity;
@@ -408,150 +352,111 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
 
         itemsDiv.appendChild(table);
         document.getElementById('total-price').textContent = total.toLocaleString();
-
-        // ======================== ใบเส็จรับเงิน   =========================
-        const checkoutBtn = document.querySelector('.checkout-btn-official');
-        if (checkoutBtn) {
-            checkoutBtn.onclick = () => {
-                const receiptNo = 'TR' + Math.floor(100000 + Math.random() * 900000);
-                const now = new Date();
-                const dateStr = now.toLocaleString('th-TH');
-
-                let itemsHtml = '';
-                cart.forEach(item => {
-                    itemsHtml += `<tr>
-                        <td style="padding:6px 0">${item.name}</td>
-                        <td style="text-align:center">${item.quantity}</td>
-                        <td style="text-align:right">${(item.price * item.quantity).toLocaleString()} ฿</td>
-                    </tr>`;
-                });
-
-                const subtotal = total;
-                const tax = 0; 
-                const grandTotal = subtotal + tax;
-
-                const receiptHtml = `<!doctype html>
-                <html lang="th">
-                <head>
-                    <meta charset="utf-8">
-                    <title>ใบเสร็จรับเงิน - TunaRoji</title>
-                    <style>
-                        body{font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding:20px; color:#222}
-                        .receipt{max-width:520px;margin:0 auto;border:1px dashed #444;padding:18px}
-                        .center{text-align:center}
-                        h2{margin:6px 0}
-                        table{width:100%;border-collapse:collapse;margin-top:10px}
-                        td,th{font-size:13px}
-                        .right{text-align:right}
-                        .muted{color:#666;font-size:12px}
-                        .total{font-weight:700;font-size:16px}
-                        .print-btn{display:inline-block;margin-top:12px;padding:8px 14px;background:#27ae60;color:#fff;border-radius:6px;text-decoration:none}
-                    </style>
-                </head>
-                <body>
-                    <div class="receipt">
-                        <div class="center">
-                            <h2>TunaRoji</h2>
-                            <div class="muted">กรุณานำใบนี้ไปยื่นที่ในฝัน</div>
-                        </div>
-                        <hr>
-                        <div>
-                            <div>ใบเสร็จ: <strong>${receiptNo}</strong></div>
-                            <div>วันที่: <strong>${dateStr}</strong></div>
-                        </div>
-
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style="text-align:left">สินค้า</th>
-                                    <th style="width:60px;text-align:center">จำนวน</th>
-                                    <th style="width:120px;text-align:right">ราคา</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                ${itemsHtml}
-                            </tbody>
-                        </table>
-
-                        <hr>
-                        <div style="display:flex;justify-content:space-between;margin-top:8px">
-                            <div class="muted">รวม</div>
-                            <div class="total">${subtotal.toLocaleString()} ฿</div>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;margin-top:4px">
-                            <div class="muted">ค่าภาษี</div>
-                            <div class="muted">${tax.toLocaleString ? tax.toLocaleString() : tax} ฿</div>
-                        </div>
-                        <div style="display:flex;justify-content:space-between;margin-top:8px;border-top:1px solid #ddd;padding-top:8px">
-                            <div class="total">รวมทั้งสิ้น</div>
-                            <div class="total">${grandTotal.toLocaleString()} ฿</div>
-                        </div>
-
-                        <div class="center" style="margin-top:14px">
-                            <div class="muted">วิธีชำระเงิน: เงินสด</div>
-                            <div style="margin-top:10px">ขอบคุณที่อุดหนุน TunaRoji!</div>
-                            <a class="print-btn" href="#" onclick="window.print();return false;">พิมพ์/บันทึกเป็น PDF</a>
-                        </div>
-                    </div>
-                </body>
-                </html>`;
-
-                const w = window.open('', '_blank', 'width=600,height=800');
-                if (w) {
-                    w.document.open();
-                    w.document.write(receiptHtml);
-                    w.document.close();
-                } else {
-                    alert('ไม่สามารถเปิดหน้าต่างใหม่ได้ โปรดอนุญาตป็อปอัพสำหรับหน้าเว็บนี้');
-                }
-
-                cart = [];
-                updateCart();
-                document.getElementById('cart-modal').style.display = 'none';
-                document.body.style.overflow = '';
-            };
-        }
     }
 
-    // ==================== Modal ====================
-    const aboutModal = document.getElementById('about-modal');
-    const cartModal = document.getElementById('cart-modal');
+    // ==================== สำคัญที่สุด: ใบเสร็จเด้งเฉพาะตอนกด "ชำระเงิน" ====================
+    document.querySelector('.snow-modal-content').addEventListener('click', function(e) {
+        if (e.target && e.target.classList.contains('checkout-btn-official')) {
+            if (cart.length === 0) {
+                alert('ตะกร้าของคุณว่างเปล่า');
+                return;
+            }
 
-    document.getElementById('about-trigger')?.addEventListener('click', e => {
-        e.preventDefault();
-        aboutModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
-    });
-    document.getElementById('about-trigger-footer')?.addEventListener('click', e => {
-        e.preventDefault();
-        aboutModal.style.display = 'block';
-        document.body.style.overflow = 'hidden';
+            const receiptNo = 'TR' + Math.floor(100000 + Math.random() * 900000);
+            const now = new Date();
+            const dateStr = now.toLocaleString('th-TH');
+
+            let itemsHtml = '';
+            cart.forEach(item => {
+                itemsHtml += `<tr>
+                    <td style="padding:8px 0">${item.name}</td>
+                    <td style="text-align:center">${item.quantity}</td>
+                    <td style="text-align:right">${(item.price * item.quantity).toLocaleString()} ฿</td>
+                </tr>`;
+            });
+
+            const total = cart.reduce((sum, i) => sum + i.price * i.quantity, 0);
+
+            const receiptHtml = `<!DOCTYPE html>
+            <html><head><meta charset="utf-8"><title>ใบเสร็จ TunaRoji</title>
+            <style>
+                body{font-family:Segoe UI,sans-serif;background:#f8f9fa;color:#333;padding:30px}
+                .receipt{max-width:500px;margin:0 auto;background:white;padding:25px;border:2px dashed #333;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.1)}
+                h2{text-align:center;margin:0 0 10px;color:#2c3e50}
+                .center{text-align:center}
+                table{width:100%;margin:15px 0;border-collapse:collapse}
+                th,td{padding:8px 0;border-bottom:1px solid #eee}
+                .total{font-weight:bold;font-size:18px;color:#27ae60}
+                .print-btn{display:inline-block;margin-top:20px;padding:12px 24px;background:#27ae60;color:white;border-radius:8px;text-decoration:none}
+            </style>
+            </head><body>
+            <div class="receipt">
+                <div class="center"><h2>TunaRoji</h2><small>กรุณานำใบนี้ไปยื่นที่แคชเชียร์......ในฝันนะจ้ะ</small></div>
+                <hr style="border:1px dashed #ddd;margin:20px 0">
+                <div><strong>ID รับสินค้า:</strong> ${receiptNo}</div>
+                <div><strong>วันที่:</strong> ${dateStr}</div>
+                <table><thead><tr><th>สินค้า</th><th style="text-align:center">จำนวน</th><th style="text-align:right">ราคา</th></tr></thead><tbody>${itemsHtml}</tbody></table>
+                <hr style="border:1px dashed #ddd;margin:20px 0">
+                <div style="text-align:right;font-size:20px"><strong>รวมทั้งสิ้น ${total.toLocaleString()} ฿</strong></div>
+                <div class="center" style="margin-top:25px">
+                    <div style="font-size:18px;margin-bottom:10px">ขอบคุณที่อุดหนุนเรา! TunaRoji</div>
+                    <a href="#" class="print-btn" onclick="window.print();return false;">พิมพ์ใบเสร็จ</a>
+                </div>
+            </div>
+            </body></html>`;
+
+            const win = window.open('', '_blank', 'width=650,height=900');
+            if (win) {
+                win.document.write(receiptHtml);
+                win.document.close();
+            } else {
+                alert('กรุณาอนุญาต Pop-up');
+            }
+
+            // ล้างตะกร้า
+            cart = [];
+            updateCart();
+            document.getElementById('cart-modal').style.display = 'none';
+            document.body.style.overflow = '';
+        }
     });
 
+    // ==================== เปิด/ปิด Modal ====================
     document.getElementById('cart-btn').onclick = () => {
-        cartModal.style.display = 'block';
+        document.getElementById('cart-modal').style.display = 'block';
         updateCart();
         document.body.style.overflow = 'hidden';
     };
 
     document.querySelectorAll('.modal .close').forEach(btn => {
         btn.onclick = () => {
-            const m = btn.closest('.modal');
-            if (m) m.style.display = 'none';
+            btn.closest('.modal').style.display = 'none';
             document.body.style.overflow = '';
         };
     });
 
-    window.onclick = e => {
-        if (e.target.classList.contains('modal')) {
-            e.target.style.display = 'none';
-            document.body.style.overflow = '';
-        }
-    };
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) {  // คลิกที่พื้นหลังเท่านั้น
+                this.style.display = 'none';
+                document.body.style.overflow = '';
+            }
+        });
+    });
 
+    // ==================== เริ่มต้น ====================
     displayProducts();
-    showSlide();
     updateCart();
+
+    // สไลด์แบนเนอร์
+    let slideIndex = 0;
+    const slides = document.querySelectorAll('.slide');
+    setInterval(() => {
+        slides.forEach(s => s.classList.remove('active'));
+        slides[slideIndex].classList.add('active');
+        slideIndex = (slideIndex + 1) % slides.length;
+    }, 4000);
+    });
 
     // ==================== TRANSLATION DICTIONARY ====================
     const translations = {
@@ -696,4 +601,3 @@ document.querySelector('.cat-btn[data-cat="all"]').classList.add('active-cat');
         const newLang = currentLanguage === 'TH' ? 'EN' : 'TH';
         updateLanguage(newLang);
     });
-});
