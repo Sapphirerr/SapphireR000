@@ -842,15 +842,39 @@ body {
     pointer-events: none;
 }
 
-.snowflake:nth-child(1) { left: 10%; animation: snowFlakes 10s linear infinite; }
-.snowflake:nth-child(2) { left: 20%; animation: snowFlakes 12s linear infinite 1s; }
-.snowflake:nth-child(3) { left: 30%; animation: snowFlakes2 14s linear infinite 2s; }
-.snowflake:nth-child(4) { left: 40%; animation: snowFlakes 11s linear infinite 3s; }
-.snowflake:nth-child(5) { left: 50%; animation: snowFlakes2 13s linear infinite 1.5s; }
-.snowflake:nth-child(6) { left: 60%; animation: snowFlakes 15s linear infinite 2.5s; }
-.snowflake:nth-child(7) { left: 70%; animation: snowFlakes2 10s linear infinite 3.5s; }
-.snowflake:nth-child(8) { left: 80%; animation: snowFlakes 12s linear infinite 0.5s; }
-.snowflake:nth-child(9) { left: 90%; animation: snowFlakes2 11s linear infinite 2s; }
+.snowflake:nth-child(1) { 
+    left: 10%; animation: snowFlakes 10s linear infinite; 
+}
+
+.snowflake:nth-child(2) { 
+    left: 20%; animation: snowFlakes 12s linear infinite 1s; 
+}
+
+.snowflake:nth-child(3) { 
+    left: 30%; animation: snowFlakes2 14s linear infinite 2s; 
+}
+
+.snowflake:nth-child(4) { 
+    left: 40%; animation: snowFlakes 11s linear infinite 3s; 
+}
+
+.snowflake:nth-child(5) { 
+    left: 50%; animation: snowFlakes2 13s linear infinite 1.5s; 
+}
+
+.snowflake:nth-child(6) { 
+    left: 60%; animation: snowFlakes 15s linear infinite 2.5s; 
+}
+.snowflake:nth-child(7) { 
+    left: 70%; animation: snowFlakes2 10s linear infinite 3.5s; 
+}
+.snowflake:nth-child(8) { 
+    left: 80%; animation: snowFlakes 12s linear infinite 0.5s; 
+}
+
+.snowflake:nth-child(9) { 
+    left: 90%; animation: snowFlakes2 11s linear infinite 2s; 
+}
 
 .about-header {
     background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #1e3c72 100%);
@@ -1371,4 +1395,34 @@ body {
 
 .dark-mode #dark-mode-btn i {
     transform: rotate(180deg);
+}
+
+.dark-mode .about-modal .modal-content {
+    background: linear-gradient(135deg, #1a2332, #0f172a);
+    border: 1px solid #334155;
+}
+
+.dark-mode .about-header {
+    background: linear-gradient(135deg, #1e3a8a, #1e40af);
+}
+
+.dark-mode .about-body {
+    color: #e2e8f0;
+    background: #0f172a;
+}
+
+.dark-mode .about-body p strong {
+    color: #60a5fa;
+}
+
+.dark-mode .highlight-box {
+    background: linear-gradient(135deg, #1e293b, #0f172a);
+    border-left-color: #3b82f6;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+}
+
+.dark-mode .mission {
+    color: #93c5fd;
+    background: rgba(59, 130, 246, 0.15);
+    border-color: #3b82f6;
 }
