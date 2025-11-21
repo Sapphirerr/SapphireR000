@@ -382,37 +382,49 @@ function displayPagination() {
         else updateCart();
     };
 
-    function updateCart() {
-        document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.quantity, 0);
-        const itemsDiv = document.getElementById('cart-items');
-        itemsDiv.innerHTML = '';
-        let total = 0;
+function updateCart() {
+    document.getElementById('cart-count').textContent = cart.reduce((s, i) => s + i.quantity, 0);
+    const itemsDiv = document.getElementById('cart-items');
+    itemsDiv.innerHTML = '';
+    let total = 0;
 
-        if (cart.length === 0) {
-            itemsDiv.innerHTML = '<p style="text-align:center;padding:30px;color:#999">ตะกร้าว่างเปล่า</p>';
-            document.getElementById('total-price').textContent = '0';
-            return;
-        }
+    if (cart.length === 0) {
+        itemsDiv.innerHTML = `
+            <div class="empty-cart-message">
+                <i class="fas fa-shopping-cart"></i>
+                <p>ตะกร้าของคุณยังว่างเปล่า</p>
+                <p style="font-size:15px; margin-top:12px; opacity:0.7;">ไปช้อปปิ้งกันเถอะ!</p>
+            </div>`;
+        document.getElementById('total-price').textContent = '0';
+        return;
+    }
 
-        const table = document.createElement('table');
-        table.innerHTML = `<thead><tr><th>สินค้า</th><th>จำนวน</th><th>ราคา</th><th>ลบ</th></tr></thead><tbody></tbody>`;
-        const tbody = table.querySelector('tbody');
+    cart.forEach(item => {
+        const imgSrc = item.imageCandidates?.[0] || 'https://via.placeholder.com/70/cccccc/666666?text=ไม่มีรูป';
 
-        cart.forEach(item => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                <td>${item.name}</td>
-                <td style="text-align:center;">
-                    <button class="qty-btn qty-minus" onclick="decreaseQuantity(${item.id})">-</button>
+        const card = document.createElement('div');
+        card.className = 'cart-item-card';
+        card.innerHTML = `
+            <div class="cart-item-info">
+                <img src="${imgSrc}" class="cart-item-img" alt="${item.name}" onerror="this.src='https://via.placeholder.com/70/cccccc/666666?text=ไม่มีรูป'">
+                <div class="cart-item-name">${item.name}</div>
+            </div>
+            <div class="cart-item-controls">
+                <div class="qty-controls">
+                    <button class="qty-btn qty-minus" onclick="decreaseQuantity(${item.id})">−</button>
                     <span class="qty-display">${item.quantity}</span>
-                    <button class="qty-btn qty-plus" onclick="increaseQuantity(${item.id})">+</button>
-                </td>
-                <td><strong>${(item.price * item.quantity).toLocaleString()} บาท</strong></td>
-                <td><button class="remove-btn" onclick="removeFromCart(${item.id})">ลบ</button></td>
-            `;
-            tbody.appendChild(tr);
-            total += item.price * item.quantity;
-        });
+                    <button class="qty-btn" onclick="increaseQuantity(${item.id})">+</button>
+                </div>
+                <div class="cart-item-price">${(item.price * item.quantity).toLocaleString()} ฿</div>
+                <button class="remove-btn" onclick="removeFromCart(${item.id})">ลบ</button>
+            </div>
+        `;
+        itemsDiv.appendChild(card);
+        total += item.price * item.quantity;
+    });
+
+    document.getElementById('total-price').textContent = total.toLocaleString();
+}
 
         itemsDiv.appendChild(table);
         document.getElementById('total-price').textContent = total.toLocaleString();
@@ -665,3 +677,4 @@ function displayPagination() {
         const newLang = currentLanguage === 'TH' ? 'EN' : 'TH';
         updateLanguage(newLang);
     });
+
