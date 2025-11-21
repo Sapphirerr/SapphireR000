@@ -234,32 +234,96 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ==================== Pagination ====================
-    function displayPagination() {
-        const pagination = document.querySelector('.pagination');
-        pagination.innerHTML = '';
-        const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+function displayPagination() {
+    const pagination = document.querySelector('.pagination');
+    pagination.innerHTML = '';
 
-        const prevBtn = document.createElement('button');
-        prevBtn.textContent = 'Previous';
-        prevBtn.disabled = currentPage === 1;
-        prevBtn.onclick = () => { if (currentPage > 1) { currentPage--; displayProducts(currentPage); } };
-        pagination.appendChild(prevBtn);
-
-        for (let i = 1; i <= totalPages; i++) {
-            const btn = document.createElement('button');
-            btn.textContent = i;
-            if (i === currentPage) btn.classList.add('active');
-            btn.onclick = () => { currentPage = i; displayProducts(i); };
-            pagination.appendChild(btn);
-        }
-
-        const nextBtn = document.createElement('button');
-        nextBtn.textContent = 'Next';
-        nextBtn.disabled = currentPage === totalPages;
-        nextBtn.onclick = () => { if (currentPage < totalPages) { currentPage++; displayProducts(currentPage); } };
-        pagination.appendChild(nextBtn);
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    if (totalPages <= 1) {
+        return;
     }
 
+    const prevBtn = document.createElement('button');
+    prevBtn.textContent = 'Previous';
+    prevBtn.disabled = currentPage === 1;
+    prevBtn.onclick = () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayProducts(currentPage);
+        }
+    };
+    pagination.appendChild(prevBtn);
+
+    let startPage, endPage;
+
+    if (totalPages <= 5) {
+        startPage = 1;
+        endPage = totalPages;
+    } else {
+        if (currentPage <= 3) {
+            startPage = 1;
+            endPage = 5;
+        } else if (currentPage >= totalPages - 2) {
+            startPage = totalPages - 4;
+            endPage = totalPages;
+        } else {
+            startPage = currentPage - 2;
+            endPage = currentPage + 2;
+        }
+    }
+
+    if (startPage > 1) {
+        const first = document.createElement('button');
+        first.textContent = '1';
+        first.onclick = () => { currentPage = 1; displayProducts(1); };
+        pagination.appendChild(first);
+
+        if (startPage > 2) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.margin = '0 8px';
+            dots.style.color = '#999';
+            pagination.appendChild(dots);
+        }
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === currentPage) btn.classList.add('active');
+        btn.onclick = () => {
+            currentPage = i;
+            displayProducts(i);
+        };
+        pagination.appendChild(btn);
+    }
+
+    if (endPage < totalPages) {
+        if (endPage < totalPages - 1) {
+            const dots = document.createElement('span');
+            dots.textContent = '...';
+            dots.style.margin = '0 8px';
+            dots.style.color = '#999';
+            pagination.appendChild(dots);
+        }
+
+        const last = document.createElement('button');
+        last.textContent = totalPages;
+        last.onclick = () => { currentPage = totalPages; displayProducts(totalPages); };
+        pagination.appendChild(last);
+    }
+
+    const nextBtn = document.createElement('button');
+    nextBtn.textContent = 'Next';
+    nextBtn.disabled = currentPage === totalPages;
+    nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayProducts(currentPage);
+        }
+    };
+    pagination.appendChild(nextBtn);
+}
     // ==================== หมวดหมู่ + ค้นหา ====================
     document.querySelectorAll('.cat-btn').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -291,7 +355,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.overflow = 'hidden';
         });
     });
-    
+
     // ==================== ตะกร้า ====================
     window.addToCart = function(id) {
         const product = products.find(p => p.id === id);
