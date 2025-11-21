@@ -492,14 +492,14 @@ function updateCart() {
             // ล้างตะกร้า
             cart = [];
             updateCart();
-            document.getElementById('cart-modal').style.display = 'none';
+            document.getElementById('cart-modal').classList.remove('show');
             document.body.style.overflow = '';
         }
     });
 
     // ==================== เปิด/ปิด Modal ====================
     document.getElementById('cart-btn').onclick = () => {
-        document.getElementById('cart-modal').style.display = 'block';
+        document.getElementById('cart-modal').classList.add('show');
         updateCart();
         document.body.style.overflow = 'hidden';
     };
@@ -677,4 +677,5 @@ function updateCart() {
         const newLang = currentLanguage === 'TH' ? 'EN' : 'TH';
         updateLanguage(newLang);
     });
+
 
